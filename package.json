@@ -19,6 +19,14 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": "./commitizen.js"
+    }
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -30,5 +38,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cz-customizable": "^6.2.0"
   }
 }
