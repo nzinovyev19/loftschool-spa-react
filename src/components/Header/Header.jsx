@@ -21,6 +21,20 @@ Header.propTypes = {
 };
 
 export default function Header(props) {
+  const buttons = [
+    {
+      value: 'map',
+      text: 'Карта',
+    },
+    {
+      value: 'profile',
+      text: 'Профиль',
+    },
+    {
+      value: 'login',
+      text: 'Логин',
+    },
+  ];
   const classes = useStyles();
   return (
     <header className={classes.root}>
@@ -41,9 +55,15 @@ export default function Header(props) {
             />
           </Box>
           <Box>
-            <Button onClick={() => props.setPage('map')}>Карта</Button>
-            <Button onClick={() => props.setPage('profile')}>Профиль</Button>
-            <Button onClick={() => props.setPage('login')}>Логин</Button>
+            {buttons.map((button) => (
+              <Button
+                key={button.value}
+                data-testid={button.value}
+                onClick={() => props.setPage(button.value)}
+              >
+                {button.text}
+              </Button>
+            ))}
           </Box>
         </Grid>
       </Container>
