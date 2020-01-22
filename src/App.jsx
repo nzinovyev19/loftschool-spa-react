@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from 'components/Header/Header';
+import Header from 'components/Header/Index';
 
 import Map from 'views/Map';
 import Login from 'views/Login';
