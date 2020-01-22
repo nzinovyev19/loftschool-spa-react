@@ -9,48 +9,55 @@ export default function Registration({ setPage }) {
   function handleSubmit(e) {
     e.preventDefault();
     setPage('map');
-    console.log(name, email, password, secondName);
+    console.log(state);
   }
 
-  // TODO: iterable inputs list
-  const [name, setName] = React.useState('');
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [secondName, setSecondName] = React.useState('');
+  function handleChange(e) {
+    const { value } = e.target;
+    setState({
+      ...state,
+      [e.target.name]: value,
+    });
+  }
+
+  const [state, setState] = React.useState({
+    email: '',
+    name: '',
+    secondName: '',
+    password: '',
+  });
 
   return (
-    <>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-      >
-        <span>Регистрация</span>
-        <input
-          type="email"
-          name="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="text"
-          name="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="text"
-          name="second-name"
-          value={secondName}
-          onChange={(e) => setSecondName(e.target.value)}
-        />
-        <input
-          type="password"
-          name="passwrod"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input type="submit" value="Зарегистрироваться" />
-      </form>
-    </>
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+    >
+      <span>Регистрация</span>
+      <input
+        type="email"
+        name="email"
+        value={state.email}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="name"
+        value={state.name}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="secondName"
+        value={state.secondName}
+        onChange={handleChange}
+      />
+      <input
+        type="password"
+        name="password"
+        value={state.password}
+        onChange={handleChange}
+      />
+      <input type="submit" value="Зарегистрироваться" />
+    </form>
   );
 }
