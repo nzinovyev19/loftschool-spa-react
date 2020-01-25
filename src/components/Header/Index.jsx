@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { Logo } from 'loft-taxi-mui-theme';
 
-import Logo from 'assets/images/logo.png';
+
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -10,7 +11,7 @@ import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles({
   root: {
-    padding: '10px 0',
+    padding: '0',
     boxShadow: '0 -3px 7px #000000',
     backgroundColor: '#fff;',
   },
@@ -48,9 +49,8 @@ export default function Header(props) {
             display="flex"
             alignItems="center"
           >
-            <img
-              src={Logo}
-              alt="LoftTaxi"
+            <Logo
+              animated="true"
               className="header__logo"
             />
           </Box>
