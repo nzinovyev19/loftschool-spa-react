@@ -18,5 +18,7 @@ module.exports = {
     'react/jsx-filename-extension': [1, {
       extensions: [".js", ".jsx"]
     }],
+    'template-curly-spacing': "off",
+    'indent': "off"
   }
 };
