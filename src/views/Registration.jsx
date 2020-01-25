@@ -1,63 +1,62 @@
 import React from 'react';
+import { Logo } from 'loft-taxi-mui-theme';
 import PropTypes from 'prop-types';
+import Background from 'assets/images/bg.jpg';
+import RegistrationForm from 'components/RegistrationForm/Index';
+
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import { styled } from '@material-ui/core/styles';
+
+const Wrap = styled(Box)({
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  height: '100vh',
+  minHeight: 600,
+  backgroundImage: `url(${Background})`,
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  zIndex: 1,
+  '&:after': {
+    content: "''",
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: -1,
+  },
+});
 
 Registration.propTypes = {
   setPage: PropTypes.func.isRequired,
 };
 
 export default function Registration({ setPage }) {
-  function handleSubmit(e) {
-    e.preventDefault();
-    setPage('map');
-    console.log(state);
-  }
-
-  function handleChange(e) {
-    const { value } = e.target;
-    setState({
-      ...state,
-      [e.target.name]: value,
-    });
-  }
-
-  const [state, setState] = React.useState({
-    email: '',
-    name: '',
-    secondName: '',
-    password: '',
-  });
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-    >
-      <span>Регистрация</span>
-      <input
-        type="email"
-        name="email"
-        value={state.email}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="name"
-        value={state.name}
-        onChange={handleChange}
-      />
-      <input
-        type="text"
-        name="secondName"
-        value={state.secondName}
-        onChange={handleChange}
-      />
-      <input
-        type="password"
-        name="password"
-        value={state.password}
-        onChange={handleChange}
-      />
-      <input type="submit" value="Зарегистрироваться" />
-    </form>
+    <Wrap>
+      <Container>
+        <Grid container>
+          <Grid item xs={6}>
+            <Box
+              height="100%"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Logo animated="true" white="true" />
+            </Box>
+          </Grid>
+          <Grid item xs={5}>
+            <RegistrationForm
+              setPage={setPage}
+            />
+          </Grid>
+        </Grid>
+      </Container>
+    </Wrap>
   );
 }
