@@ -23,10 +23,11 @@ BaseButton.defaultProps = {
   type: 'button',
 };
 
-export default function BaseButton({ content, type }) {
+export default function BaseButton({ content, type, ...props }) {
   const classes = useStyles();
   return (
     <Button
+      {...props}
       type={type}
       className={classes.root}
     >
