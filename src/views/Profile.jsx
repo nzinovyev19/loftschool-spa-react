@@ -116,19 +116,20 @@ export default function Profile({ setPage }) {
                           >
                             <MCIcon />
                             <TextField
-                              label="Номер карты*"
                               type="text"
                               name="cardNumber"
+                              label="Номер карты*"
+                              fullWidth
                               value={state.cardNumber}
                               onChange={handleChange}
-                              fullWidth
                             />
                             <Box mt={2}>
                               <DatePicker
+                                name="date"
                                 views={['year', 'month']}
                                 label="Срок действия *"
-                                name="date"
                                 format="MM/yy"
+                                disabled
                                 fullWidth
                                 value={state.date}
                                 onChange={handleChange}
