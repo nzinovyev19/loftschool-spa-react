@@ -64,6 +64,7 @@ export default function RegistrationForm({ setPage }) {
         {' '}
         <Link
           href="#"
+          data-testid="login-link"
           onClick={() => setPage('login')}
         >
           Войти
