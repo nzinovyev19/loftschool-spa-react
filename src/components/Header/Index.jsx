@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import { Logo } from 'loft-taxi-mui-theme';
+import { makeStyles } from '@material-ui/core/styles';
+import LoggingContext from 'context/LoggingContext';
 
 
 import Box from '@material-ui/core/Box';
@@ -30,10 +31,6 @@ export default function Header(props) {
     {
       value: 'profile',
       text: 'Профиль',
-    },
-    {
-      value: 'login',
-      text: 'Логин',
     },
   ];
   const classes = useStyles();
@@ -64,6 +61,9 @@ export default function Header(props) {
                 {button.text}
               </Button>
             ))}
+            <LoggingContext.Consumer>
+              {({ logout }) => (<Button data-testid="logout" onClick={logout}>Выйти</Button>)}
+            </LoggingContext.Consumer>
           </Box>
         </Grid>
       </Container>

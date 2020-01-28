@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BaseButton from 'components/BaseButton';
+import LoggingContext from 'context/LoggingContext';
 
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { styled } from '@material-ui/core/styles';
-
 
 const Form = styled(Box)({
   display: 'flex',
@@ -23,21 +23,22 @@ LoginForm.propTypes = {
 };
 
 export default function LoginForm({ setPage }) {
+  const { login } = React.useContext(LoggingContext);
+
   function handleSubmit(e) {
     e.preventDefault();
-    setPage('map');
-    console.log(login, password);
+    login(email, password);
   }
 
-  function handlerOnLoginValue(e) {
-    setLogin(e.target.value);
+  function handlerOnEmailValue(e) {
+    setEmail(e.target.value);
   }
 
   function handlerOnPasswordValue(e) {
     setPassword(e.target.value);
   }
 
-  const [login, setLogin] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
   return (
@@ -60,6 +61,7 @@ export default function LoginForm({ setPage }) {
         <Link
           href="#"
           onClick={() => setPage('registration')}
+          data-testid="registration-link"
         >
           Зарегистрируйтесь
         </Link>
@@ -69,12 +71,14 @@ export default function LoginForm({ setPage }) {
         mt={2}
       >
         <TextField
-          label="Имя пользователя*"
-          type="text"
-          name="login"
+          label="Почта*"
+          placeholder="Почта*"
+          type="email"
+          name="email"
           fullWidth
-          value={login}
-          onChange={handlerOnLoginValue}
+          data-testid="email-input"
+          value={email}
+          onChange={handlerOnEmailValue}
         />
       </Box>
       <Box
@@ -83,6 +87,7 @@ export default function LoginForm({ setPage }) {
       >
         <TextField
           label="Пароль*"
+          placeholder="Пароль*"
           type="password"
           name="password"
           fullWidth
@@ -99,6 +104,7 @@ export default function LoginForm({ setPage }) {
         <BaseButton
           type="submit"
           content="Войти"
+          data-testid="login-btn"
         />
       </Box>
     </Form>
