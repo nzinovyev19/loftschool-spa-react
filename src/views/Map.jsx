@@ -159,7 +159,7 @@ export default function Map({ setPage }) {
                 bgcolor="#FFF"
                 zIndex="2"
               >
-                {isProfileInfoEmpty ? <ProfileInfo data-testid="profile-info" /> : <TravelInfo />}
+                {isProfileInfoEmpty ? <ProfileInfo setPage={setPage} data-testid="profile-info" /> : <TravelInfo />}
               </Box>
             </Grid>
           </Grid>
