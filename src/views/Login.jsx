@@ -2,7 +2,8 @@ import React from 'react';
 import { Logo } from 'loft-taxi-mui-theme';
 import PropTypes from 'prop-types';
 import Background from 'assets/images/bg.jpg';
-import LoginForm from 'components/LoginForm/Index';
+import RegistrationForm from 'components/RegistrationForm';
+import AuthorizationForm from 'components/AuthorizationForm';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -31,11 +32,22 @@ const Wrap = styled(Box)({
   },
 });
 
+const views = {
+  registration: function registration(setForm, setPage) {
+    return <RegistrationForm setForm={setForm} setPage={setPage} />;
+  },
+  authorization: function authorization(setForm, setPage) {
+    return <AuthorizationForm setForm={setForm} setPage={setPage} />;
+  },
+};
+
 Login.propTypes = {
   setPage: PropTypes.func.isRequired,
 };
 
 export default function Login({ setPage }) {
+  const [form, setForm] = React.useState('authorization');
+
   return (
     <Wrap>
       <Container>
@@ -51,7 +63,7 @@ export default function Login({ setPage }) {
             </Box>
           </Grid>
           <Grid item xs={5}>
-            <LoginForm setPage={setPage} />
+            {views[form](setForm, setPage)}
           </Grid>
         </Grid>
       </Container>
