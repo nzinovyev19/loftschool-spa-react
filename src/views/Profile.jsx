@@ -2,10 +2,10 @@ import 'date-fns';
 import React, { useEffect, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { MCIcon } from 'loft-taxi-mui-theme';
-import Header from 'components/Header/Index';
+import Header from 'components/Header/index';
 import BaseButton from 'components/BaseButton';
 import Background from 'assets/images/bg.jpg';
-import LoggingContext from 'context/LoggingContext';
+import { AuthContext } from 'context/Auth';
 
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
@@ -23,9 +23,24 @@ Profile.propTypes = {
 };
 
 export default function Profile({ setPage }) {
+  const [state, setState] = useState({
+    cardNumber: '',
+    date: new Date(),
+    name: '',
+    cvc: '',
+  });
+  const { isAuthorized, logout } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!isAuthorized) {
+      logout();
+      setPage('login');
+    }
+  });
+
   function handleSubmit(e) {
     e.preventDefault();
-    setPage('map');
+    // TODO: setPage on map
     console.log(state);
   }
 
@@ -36,18 +51,6 @@ export default function Profile({ setPage }) {
       [e.target.name]: value,
     });
   }
-
-  const [state, setState] = useState({
-    cardNumber: '',
-    date: new Date(),
-    name: '',
-    cvc: '',
-  });
-  const { isLoggedIn, logout } = useContext(LoggingContext);
-
-  useEffect(() => {
-    if (!isLoggedIn) logout();
-  });
 
   const Wrap = styled(Box)({
     position: 'relative',
@@ -80,21 +83,21 @@ export default function Profile({ setPage }) {
     >
       <Header setPage={setPage} />
       <Wrap>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Container>
-            <Grid
-              container
-              justify="center"
-            >
-              <Grid item xs={6}>
-                <Box
-                  component="form"
-                  p={5}
-                  borderRadius={5}
-                  bgcolor="#FFF"
-                  textAlign="center"
-                  onSubmit={handleSubmit}
-                >
+        <Container>
+          <Grid
+            container
+            justify="center"
+          >
+            <Grid item xs={6}>
+              <Box
+                component="form"
+                p={5}
+                borderRadius={5}
+                bgcolor="#FFF"
+                textAlign="center"
+                onSubmit={handleSubmit}
+              >
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <Typography variant="h4">Профиль</Typography>
                   <Typography
                     component="p"
@@ -167,11 +170,11 @@ export default function Profile({ setPage }) {
                       </Grid>
                     </Grid>
                   </Box>
-                </Box>
-              </Grid>
+                </MuiPickersUtilsProvider>
+              </Box>
             </Grid>
-          </Container>
-        </MuiPickersUtilsProvider>
+          </Grid>
+        </Container>
       </Wrap>
     </Box>
   );
