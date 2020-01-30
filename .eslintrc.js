@@ -15,6 +15,7 @@ module.exports = {
     },
   },
   rules: {
+    'max-len': [2, 120],
     'react/jsx-filename-extension': [1, {
       extensions: [".js", ".jsx"]
     }],
