@@ -14,15 +14,24 @@ const Form = styled(Box)({
   display: 'flex',
   alignItems: 'flex-start',
   flexDirection: 'column',
+  padding: 50,
   borderRadius: 5,
   backgroundColor: '#FFFFFF',
 });
 
 RegistrationForm.propTypes = {
   setPage: PropTypes.func.isRequired,
+  setForm: PropTypes.func.isRequired,
 };
 
-export default function RegistrationForm({ setPage }) {
+export default function RegistrationForm({ setPage, setForm }) {
+  const [state, setState] = React.useState({
+    email: '',
+    name: '',
+    secondName: '',
+    password: '',
+  });
+
   function handleSubmit(e) {
     e.preventDefault();
     setPage('map');
@@ -37,17 +46,9 @@ export default function RegistrationForm({ setPage }) {
     });
   }
 
-  const [state, setState] = React.useState({
-    email: '',
-    name: '',
-    secondName: '',
-    password: '',
-  });
-
   return (
     <Form
-      p={5}
-      boxShadow={0}
+      component="form"
       onSubmit={handleSubmit}
     >
       <Typography
@@ -65,7 +66,7 @@ export default function RegistrationForm({ setPage }) {
         <Link
           href="#"
           data-testid="login-link"
-          onClick={() => setPage('login')}
+          onClick={() => setForm('authorization')}
         >
           Войти
         </Link>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import BaseButton from 'components/BaseButton';
-import LoggingContext from 'context/LoggingContext';
+import { AuthContext } from 'context/Auth';
 
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
@@ -18,28 +18,31 @@ const Form = styled(Box)({
   backgroundColor: '#FFFFFF',
 });
 
-LoginForm.propTypes = {
+AuthorizationForm.propTypes = {
   setPage: PropTypes.func.isRequired,
+  setForm: PropTypes.func.isRequired,
 };
 
-export default function LoginForm({ setPage }) {
-  const { login } = React.useContext(LoggingContext);
+export default function AuthorizationForm({ setPage, setForm }) {
+  const [state, setState] = React.useState({
+    email: '',
+    password: '',
+  });
+  const { authorize } = React.useContext(AuthContext);
 
   function handleSubmit(e) {
     e.preventDefault();
-    login(email, password);
+    authorize(state.email, state.password);
+    setPage('map');
   }
 
-  function handlerOnEmailValue(e) {
-    setEmail(e.target.value);
+  function handleChange(e) {
+    const { value } = e.target;
+    setState({
+      ...state,
+      [e.target.name]: value,
+    });
   }
-
-  function handlerOnPasswordValue(e) {
-    setPassword(e.target.value);
-  }
-
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
 
   return (
     <Form
@@ -60,7 +63,7 @@ export default function LoginForm({ setPage }) {
         {' '}
         <Link
           href="#"
-          onClick={() => setPage('registration')}
+          onClick={() => setForm('registration')}
           data-testid="registration-link"
         >
           Зарегистрируйтесь
@@ -77,8 +80,8 @@ export default function LoginForm({ setPage }) {
           name="email"
           fullWidth
           data-testid="email-input"
-          value={email}
-          onChange={handlerOnEmailValue}
+          value={state.email}
+          onChange={handleChange}
         />
       </Box>
       <Box
@@ -91,8 +94,8 @@ export default function LoginForm({ setPage }) {
           type="password"
           name="password"
           fullWidth
-          value={password}
-          onChange={handlerOnPasswordValue}
+          value={state.password}
+          onChange={handleChange}
         />
       </Box>
       <Box

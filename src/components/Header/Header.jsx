@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Logo } from 'loft-taxi-mui-theme';
 import { makeStyles } from '@material-ui/core/styles';
-import LoggingContext from 'context/LoggingContext';
-
+import { AuthContext } from 'context/Auth';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -22,7 +21,10 @@ Header.propTypes = {
   setPage: PropTypes.func.isRequired,
 };
 
-export default function Header(props) {
+export default function Header({ setPage }) {
+  const classes = useStyles();
+  const { logout } = React.useContext(AuthContext);
+
   const buttons = [
     {
       value: 'map',
@@ -33,7 +35,12 @@ export default function Header(props) {
       text: 'Профиль',
     },
   ];
-  const classes = useStyles();
+
+  function logoutHandler(e) {
+    logout();
+    setPage('login');
+  }
+
   return (
     <header className={classes.root}>
       <Container>
@@ -56,14 +63,12 @@ export default function Header(props) {
               <Button
                 key={button.value}
                 data-testid={button.value}
-                onClick={() => props.setPage(button.value)}
+                onClick={() => setPage(button.value)}
               >
                 {button.text}
               </Button>
             ))}
-            <LoggingContext.Consumer>
-              {({ logout }) => (<Button data-testid="logout" onClick={logout}>Выйти</Button>)}
-            </LoggingContext.Consumer>
+            <Button data-testid="logout" onClick={logoutHandler}>Выйти</Button>
           </Box>
         </Grid>
       </Container>
