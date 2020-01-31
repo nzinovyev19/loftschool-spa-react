@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import Header from 'components/Header/index';
 import TravelInfo from 'components/MapInfo/TravelInfo';
 import ProfileInfo from 'components/MapInfo/ProfileInfo';
 import { AuthContext } from 'context/Auth';
@@ -54,35 +53,28 @@ export default function Map({ setPage }) {
 
   return (
     <Box
-      display="flex"
-      flexDirection="column"
+      component="section"
+      position="relative"
       height="100%"
       width="100%"
     >
-      <Header setPage={setPage} />
-      <Box
-        component="section"
-        position="relative"
-        height="100%"
-      >
-        <Container>
-          <Grid container>
-            <Grid item xs={4}>
-              <Box
-                position="absolute"
-                top="10%"
-                width="30%"
-                p={5}
-                bgcolor="#FFF"
-                zIndex="2"
-              >
-                {isProfileInfoEmpty ? <ProfileInfo setPage={setPage} data-testid="profile-info" /> : <TravelInfo />}
-              </Box>
-            </Grid>
+      <Container>
+        <Grid container>
+          <Grid item xs={4}>
+            <Box
+              position="absolute"
+              top="10%"
+              width="30%"
+              p={5}
+              bgcolor="#FFF"
+              zIndex="2"
+            >
+              {isProfileInfoEmpty ? <ProfileInfo setPage={setPage} data-testid="profile-info" /> : <TravelInfo />}
+            </Box>
           </Grid>
-        </Container>
-        <div style={style} ref={(el) => { mapContainer = el; }} />
-      </Box>
+        </Grid>
+      </Container>
+      <div style={style} ref={(el) => { mapContainer = el; }} />
     </Box>
   );
 }
