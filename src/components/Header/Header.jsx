@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Logo } from 'loft-taxi-mui-theme';
 import { makeStyles } from '@material-ui/core/styles';
+import { AuthContext } from 'context/Auth';
 
-import Logo from 'assets/images/logo.png';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -10,7 +11,7 @@ import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles({
   root: {
-    padding: '10px 0',
+    padding: '0',
     boxShadow: '0 -3px 7px #000000',
     backgroundColor: '#fff;',
   },
@@ -20,7 +21,10 @@ Header.propTypes = {
   setPage: PropTypes.func.isRequired,
 };
 
-export default function Header(props) {
+export default function Header({ setPage }) {
+  const classes = useStyles();
+  const { logout } = React.useContext(AuthContext);
+
   const buttons = [
     {
       value: 'map',
@@ -30,12 +34,13 @@ export default function Header(props) {
       value: 'profile',
       text: 'Профиль',
     },
-    {
-      value: 'login',
-      text: 'Логин',
-    },
   ];
-  const classes = useStyles();
+
+  function logoutHandler(e) {
+    logout();
+    setPage('login');
+  }
+
   return (
     <header className={classes.root}>
       <Container>
@@ -48,9 +53,8 @@ export default function Header(props) {
             display="flex"
             alignItems="center"
           >
-            <img
-              src={Logo}
-              alt="LoftTaxi"
+            <Logo
+              animated="true"
               className="header__logo"
             />
           </Box>
@@ -59,11 +63,12 @@ export default function Header(props) {
               <Button
                 key={button.value}
                 data-testid={button.value}
-                onClick={() => props.setPage(button.value)}
+                onClick={() => setPage(button.value)}
               >
                 {button.text}
               </Button>
             ))}
+            <Button data-testid="logout" onClick={logoutHandler}>Выйти</Button>
           </Box>
         </Grid>
       </Container>

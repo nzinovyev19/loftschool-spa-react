@@ -1,51 +1,56 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Logo } from 'loft-taxi-mui-theme';
+import RegistrationForm from 'components/RegistrationForm';
+import AuthorizationForm from 'components/AuthorizationForm';
+import BaseBackgroundWrap from 'components/BaseBackgroundWrap';
+
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+
+const views = {
+  registration: function registration(setForm, setPage) {
+    return <RegistrationForm setForm={setForm} setPage={setPage} />;
+  },
+  authorization: function authorization(setForm, setPage) {
+    return <AuthorizationForm setForm={setForm} setPage={setPage} />;
+  },
+};
 
 Login.propTypes = {
   setPage: PropTypes.func.isRequired,
 };
 
 export default function Login({ setPage }) {
-  function handleSubmit(e) {
-    e.preventDefault();
-    setPage('map');
-    console.log(login, password);
-  }
-
-  function handlerOnLoginValue(e) {
-    setLogin(e.target.value);
-  }
-
-  function handlerOnPasswordValue(e) {
-    setPassword(e.target.value);
-  }
-
-  const [login, setLogin] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [form, setForm] = React.useState('authorization');
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+    <Box
+      height="100%"
+      width="100%"
+      display="flex"
+      flexDirection="column"
     >
-      <span>Войти</span>
-      <input
-        type="text"
-        name="login"
-        value={login}
-        onChange={handlerOnLoginValue}
-      />
-      <input
-        type="password"
-        name="password"
-        value={password}
-        onChange={handlerOnPasswordValue}
-      />
-      <input type="submit" value="Войти" />
-      <p>
-        Новый пользователь?
-        <button type="button" onClick={() => setPage('registration')}>Зарегистрируйтесь</button>
-      </p>
-    </form>
+      <BaseBackgroundWrap>
+        <Container>
+          <Grid container>
+            <Grid item xs={6}>
+              <Box
+                height="100%"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Logo animated="true" white="true" />
+              </Box>
+            </Grid>
+            <Grid item xs={5}>
+              {views[form](setForm, setPage)}
+            </Grid>
+          </Grid>
+        </Container>
+      </BaseBackgroundWrap>
+    </Box>
   );
 }
