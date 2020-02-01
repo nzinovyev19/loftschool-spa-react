@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Logo } from 'loft-taxi-mui-theme';
 import RegistrationForm from 'components/RegistrationForm';
 import AuthorizationForm from 'components/AuthorizationForm';
@@ -18,11 +17,7 @@ const views = {
   },
 };
 
-Login.propTypes = {
-  setPage: PropTypes.func.isRequired,
-};
-
-export default function Login({ setPage }) {
+export default function Login() {
   const [form, setForm] = React.useState('authorization');
 
   return (
@@ -46,7 +41,7 @@ export default function Login({ setPage }) {
               </Box>
             </Grid>
             <Grid item xs={5}>
-              {views[form](setForm, setPage)}
+              {views[form](setForm)}
             </Grid>
           </Grid>
         </Container>
