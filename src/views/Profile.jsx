@@ -1,6 +1,6 @@
 import 'date-fns';
 import React, { useEffect, useContext, useState } from 'react';
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { MCIcon } from 'loft-taxi-mui-theme';
 import BaseButton from 'components/BaseButton';
 import BaseBackgroundWrap from 'components/BaseBackgroundWrap';
@@ -15,11 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-Profile.propTypes = {
-  setPage: PropTypes.func.isRequired,
-};
-
-export default function Profile({ setPage }) {
+export default function Profile() {
   const [state, setState] = useState({
     cardNumber: '',
     date: new Date(),
@@ -27,17 +23,18 @@ export default function Profile({ setPage }) {
     cvc: '',
   });
   const { isAuthorized, logout } = useContext(AuthContext);
+  const history = useHistory();
 
   useEffect(() => {
     if (!isAuthorized) {
       logout();
-      setPage('login');
+      history.push('/');
     }
   });
 
   function handleSubmit(e) {
     e.preventDefault();
-    // TODO: setPage on map
+    history.push('/map');
     console.log(state);
   }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import TravelInfo from 'components/MapInfo/TravelInfo';
 import ProfileInfo from 'components/MapInfo/ProfileInfo';
 import { AuthContext } from 'context/Auth';
@@ -9,13 +9,9 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 
-Map.propTypes = {
-  setPage: PropTypes.func.isRequired,
-};
-
 Mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
-export default function Map({ setPage }) {
+export default function Map() {
   const { isAuthorized, logout } = React.useContext(AuthContext);
   const [mapOptions] = useState({
     lng: 49.1315,
@@ -30,11 +26,12 @@ export default function Map({ setPage }) {
     width: '100%',
   };
   let mapContainer;
+  const history = useHistory();
 
   useEffect(() => {
     if (!isAuthorized) {
       logout();
-      setPage('login');
+      history.push('login');
     }
     const map = new Mapboxgl.Map({
       container: mapContainer,
@@ -69,7 +66,7 @@ export default function Map({ setPage }) {
               bgcolor="#FFF"
               zIndex="2"
             >
-              {isProfileInfoEmpty ? <ProfileInfo setPage={setPage} data-testid="profile-info" /> : <TravelInfo />}
+              {isProfileInfoEmpty ? <ProfileInfo data-testid="profile-info" /> : <TravelInfo />}
             </Box>
           </Grid>
         </Grid>

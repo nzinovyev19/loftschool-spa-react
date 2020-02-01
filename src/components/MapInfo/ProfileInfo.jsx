@@ -1,15 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import BaseButton from 'components/BaseButton';
 
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
-ProfileInfo.propTypes = {
-  setPage: PropTypes.func.isRequired,
-};
+export default function ProfileInfo() {
+  const history = useHistory();
 
-export default function ProfileInfo({ setPage }) {
   return (
     <Box>
       <Typography
@@ -32,7 +30,7 @@ export default function ProfileInfo({ setPage }) {
         mt={2}
       >
         <BaseButton
-          onClick={() => setPage('profile')}
+          onClick={() => history.push('/profile')}
           fullWidth
           content="Перейти в профиль"
         />

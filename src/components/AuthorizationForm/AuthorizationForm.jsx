@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import BaseButton from 'components/BaseButton';
 import { AuthContext } from 'context/Auth';
 
@@ -19,21 +20,22 @@ const Form = styled(Box)({
 });
 
 AuthorizationForm.propTypes = {
-  setPage: PropTypes.func.isRequired,
   setForm: PropTypes.func.isRequired,
 };
 
-export default function AuthorizationForm({ setPage, setForm }) {
+export default function AuthorizationForm({ setForm }) {
   const [state, setState] = React.useState({
     email: '',
     password: '',
   });
   const { authorize } = React.useContext(AuthContext);
+  const history = useHistory();
+
 
   function handleSubmit(e) {
     e.preventDefault();
     authorize(state.email, state.password);
-    setPage('map');
+    history.push('/map');
   }
 
   function handleChange(e) {

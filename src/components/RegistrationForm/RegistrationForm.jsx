@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import BaseButton from 'components/BaseButton';
 
 import Box from '@material-ui/core/Box';
@@ -20,21 +21,21 @@ const Form = styled(Box)({
 });
 
 RegistrationForm.propTypes = {
-  setPage: PropTypes.func.isRequired,
   setForm: PropTypes.func.isRequired,
 };
 
-export default function RegistrationForm({ setPage, setForm }) {
+export default function RegistrationForm({ setForm }) {
   const [state, setState] = React.useState({
     email: '',
     name: '',
     secondName: '',
     password: '',
   });
+  const history = useHistory();
 
   function handleSubmit(e) {
     e.preventDefault();
-    setPage('map');
+    history.push('/map');
     console.log(state);
   }
 
