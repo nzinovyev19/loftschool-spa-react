@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { getToken } from 'modules/auth/selectors';
 import TravelInfo from 'components/MapInfo/TravelInfo';
 import ProfileInfo from 'components/MapInfo/ProfileInfo';
-import { AuthContext } from 'context/Auth';
 
 import Mapboxgl from 'mapbox-gl';
 import Box from '@material-ui/core/Box';
@@ -11,8 +13,11 @@ import Container from '@material-ui/core/Container';
 
 Mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
-export default function Map() {
-  const { isAuthorized, logout } = React.useContext(AuthContext);
+Map.propTypes = {
+  token: PropTypes.string.isRequired,
+};
+
+function Map({ token }) {
   const [mapOptions] = useState({
     lng: 49.1315,
     lat: 55.7824,
@@ -29,10 +34,7 @@ export default function Map() {
   const history = useHistory();
 
   useEffect(() => {
-    if (!isAuthorized) {
-      logout();
-      history.push('login');
-    }
+    if (!token) history.push('/');
     const map = new Mapboxgl.Map({
       container: mapContainer,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -75,3 +77,9 @@ export default function Map() {
     </Box>
   );
 }
+
+const mapStateToProps = (state) => ({
+  token: getToken(state),
+});
+
+export default connect(mapStateToProps)(Map);
