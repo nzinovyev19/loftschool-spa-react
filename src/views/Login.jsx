@@ -9,11 +9,11 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 
 const views = {
-  registration: function registration(setForm, setPage) {
-    return <RegistrationForm setForm={setForm} setPage={setPage} />;
+  registration: function registration(setForm) {
+    return <RegistrationForm setForm={setForm} />;
   },
-  authorization: function authorization(setForm, setPage) {
-    return <AuthorizationForm setForm={setForm} setPage={setPage} />;
+  authorization: function authorization(setForm) {
+    return <AuthorizationForm setForm={setForm} />;
   },
 };
 
