@@ -5,7 +5,9 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
-import { AuthConsumer, MemoizedAuthProvider } from 'context/Auth';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getToken } from 'modules/auth/selectors';
 import Header from 'components/Header';
 import Box from '@material-ui/core/Box';
 import { theme } from 'loft-taxi-mui-theme';
@@ -15,36 +17,40 @@ import Map from 'views/Map';
 import Login from 'views/Login';
 import Profile from 'views/Profile';
 
-function App() {
+App.propTypes = {
+  token: PropTypes.string.isRequired,
+};
+
+function App({ token }) {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <MemoizedAuthProvider>
-          <Box
-            display="flex"
-            flexDirection="column"
-            width="100%"
-            height="100vh"
-            minHeight={600}
-          >
-            <AuthConsumer>
-              {({ isAuthorized }) => (isAuthorized ? <Header /> : null)}
-            </AuthConsumer>
-            <Switch>
-              <Route
-                path="/"
-                exact
-                component={Login}
-              />
-              <Route path="/map" component={Map} />
-              <Route path="/profile" component={Profile} />
-              <Redirect to="/" />
-            </Switch>
-          </Box>
-        </MemoizedAuthProvider>
+        <Box
+          display="flex"
+          flexDirection="column"
+          width="100%"
+          height="100vh"
+          minHeight={600}
+        >
+          {token ? <Header /> : null}
+          <Switch>
+            <Route
+              path="/"
+              exact
+              component={Login}
+            />
+            <Route path="/map" component={Map} />
+            <Route path="/profile" component={Profile} />
+            <Redirect to="/" />
+          </Switch>
+        </Box>
       </ThemeProvider>
     </BrowserRouter>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  token: getToken(state),
+});
+
+export default connect(mapStateToProps)(App);
