@@ -24,5 +24,8 @@ module.exports = {
     }],
     'template-curly-spacing': "off",
     'indent': "off",
+    'no-underscore-dangle': ["error", {
+      "allow": ["__REDUX_DEVTOOLS_EXTENSION__"]
+    }]
   }
 };
