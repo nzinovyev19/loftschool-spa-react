@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { authorize } from 'modules/auth/actions';
+import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { getIsLoading, getError, getToken } from 'modules/auth/selectors';
 import BaseButton from 'components/BaseButton';
-import { AuthContext } from 'context/Auth';
 
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
@@ -21,21 +23,32 @@ const Form = styled(Box)({
 
 AuthorizationForm.propTypes = {
   setForm: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  token: PropTypes.string.isRequired,
+  authorize: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
 
-export default function AuthorizationForm({ setForm }) {
+AuthorizationForm.defaultProps = {
+  error: null,
+};
+
+function AuthorizationForm(props) {
   const [state, setState] = React.useState({
     email: '',
     password: '',
   });
-  const { authorize } = React.useContext(AuthContext);
   const history = useHistory();
-
+  const {
+    isLoading,
+    error,
+    token,
+    authorize,
+  } = props;
 
   function handleSubmit(e) {
     e.preventDefault();
-    authorize(state.email, state.password);
-    history.push('/map');
+    authorize({ email: state.email, password: state.password });
   }
 
   function handleChange(e) {
@@ -45,6 +58,10 @@ export default function AuthorizationForm({ setForm }) {
       [e.target.name]: value,
     });
   }
+
+  React.useEffect(() => {
+    if (token) history.push('/map');
+  });
 
   return (
     <Form
@@ -65,7 +82,7 @@ export default function AuthorizationForm({ setForm }) {
         {' '}
         <Link
           href="#"
-          onClick={() => setForm('registration')}
+          onClick={() => props.setForm('registration')}
           data-testid="registration-link"
         >
           Зарегистрируйтесь
@@ -102,16 +119,40 @@ export default function AuthorizationForm({ setForm }) {
       </Box>
       <Box
         display="flex"
+        flexDirection="column"
         justifyContent="flex-end"
         width="100%"
         mt={3}
       >
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          m="5px 0"
+          color="#EB5757"
+        >
+          {error}
+        </Box>
         <BaseButton
           type="submit"
           content="Войти"
+          disabled={isLoading}
+          bgcolor={isLoading ? 'text.disabled' : ''}
           data-testid="login-btn"
         />
       </Box>
     </Form>
   );
 }
+
+const mapStateToProps = (state) => ({
+  token: getToken(state),
+  error: getError(state),
+  isLoading: getIsLoading(state),
+});
+
+const mapDispatchToProps = { authorize };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(AuthorizationForm);
