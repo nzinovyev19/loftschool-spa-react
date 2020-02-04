@@ -1,11 +1,13 @@
-import 'date-fns';
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { getToken } from 'modules/auth/selectors';
 import { MCIcon } from 'loft-taxi-mui-theme';
 import BaseButton from 'components/BaseButton';
 import BaseBackgroundWrap from 'components/BaseBackgroundWrap';
-import { AuthContext } from 'context/Auth';
 
+import 'date-fns';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -15,21 +17,21 @@ import Typography from '@material-ui/core/Typography';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-export default function Profile() {
+Profile.propTypes = {
+  token: PropTypes.string.isRequired,
+};
+
+function Profile({ token }) {
   const [state, setState] = useState({
     cardNumber: '',
     date: new Date(),
     name: '',
     cvc: '',
   });
-  const { isAuthorized, logout } = useContext(AuthContext);
   const history = useHistory();
 
   useEffect(() => {
-    if (!isAuthorized) {
-      logout();
-      history.push('/');
-    }
+    if (!token) history.push('/');
   });
 
   function handleSubmit(e) {
@@ -143,3 +145,9 @@ export default function Profile() {
     </BaseBackgroundWrap>
   );
 }
+
+const mapStateToProps = (state) => ({
+  token: getToken(state),
+});
+
+export default connect(mapStateToProps)(Profile);
