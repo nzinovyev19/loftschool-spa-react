@@ -16,6 +16,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import Map from 'views/Map';
 import Login from 'views/Login';
 import Profile from 'views/Profile';
+import BasePrivateRoute from 'components/BasePrivateRoute';
 
 App.propTypes = {
   token: PropTypes.string.isRequired,
@@ -39,8 +40,8 @@ function App({ token }) {
               exact
               component={Login}
             />
-            <Route path="/map" component={Map} />
-            <Route path="/profile" component={Profile} />
+            <BasePrivateRoute path="/map" component={Map} />
+            <BasePrivateRoute path="/profile" component={Profile} />
             <Redirect to="/" />
           </Switch>
         </Box>
