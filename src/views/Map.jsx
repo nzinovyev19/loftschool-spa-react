@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { getToken } from 'modules/auth/selectors';
 import TravelInfo from 'components/MapInfo/TravelInfo';
 import ProfileInfo from 'components/MapInfo/ProfileInfo';
@@ -23,7 +22,7 @@ function Map({ token }) {
     lat: 55.7824,
     zoom: 10,
   });
-  const [isProfileInfoEmpty, setProfileInfoValue] = useState(true);
+  const profile = useSelector((state) => state.profile.info);
   const style = {
     position: 'absolute',
     top: 0,
@@ -31,10 +30,8 @@ function Map({ token }) {
     width: '100%',
   };
   let mapContainer;
-  const history = useHistory();
 
   useEffect(() => {
-    if (!token) history.push('/');
     const map = new Mapboxgl.Map({
       container: mapContainer,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -45,10 +42,6 @@ function Map({ token }) {
       map.remove();
     };
   });
-
-  useEffect(() => {
-    if (localStorage.profile) setProfileInfoValue(false);
-  }, [isProfileInfoEmpty]);
 
   return (
     <Box
@@ -68,7 +61,7 @@ function Map({ token }) {
               bgcolor="#FFF"
               zIndex="2"
             >
-              {isProfileInfoEmpty ? <ProfileInfo data-testid="profile-info" /> : <TravelInfo />}
+              {profile ? <TravelInfo /> : <ProfileInfo data-testid="profile-info" />}
             </Box>
           </Grid>
         </Grid>
