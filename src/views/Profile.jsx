@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { getToken } from 'modules/auth/selectors';
 import { MCIcon } from 'loft-taxi-mui-theme';
+import { setProfile } from 'modules/profile/actions';
 import BaseButton from 'components/BaseButton';
 import BaseBackgroundWrap from 'components/BaseBackgroundWrap';
 
@@ -17,33 +16,28 @@ import Typography from '@material-ui/core/Typography';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-Profile.propTypes = {
-  token: PropTypes.string.isRequired,
-};
-
-function Profile({ token }) {
-  const [state, setState] = useState({
+function Profile() {
+  const [stateForm, setStateForm] = useState({
     cardNumber: '',
     date: new Date(),
     name: '',
     cvc: '',
   });
   const history = useHistory();
-
-  useEffect(() => {
-    if (!token) history.push('/');
-  });
+  const dispatch = useDispatch();
+  const { token } = useSelector((state) => state.auth);
+  const { error, isLoading } = useSelector((state) => state.profile);
 
   function handleSubmit(e) {
     e.preventDefault();
+    dispatch(setProfile({ ...stateForm, token }));
     history.push('/map');
-    console.log(state);
   }
 
   function handleChange(e) {
     const { value } = e.target;
-    setState({
-      ...state,
+    setStateForm({
+      ...stateForm,
       [e.target.name]: value,
     });
   }
@@ -90,7 +84,7 @@ function Profile({ token }) {
                             name="cardNumber"
                             label="Номер карты*"
                             fullWidth
-                            value={state.cardNumber}
+                            value={stateForm.cardNumber}
                             onChange={handleChange}
                           />
                           <Box mt={2}>
@@ -101,7 +95,7 @@ function Profile({ token }) {
                               format="MM/yy"
                               disabled
                               fullWidth
-                              value={state.date}
+                              value={stateForm.date}
                               onChange={handleChange}
                             />
                           </Box>
@@ -115,7 +109,7 @@ function Profile({ token }) {
                             label="Имя владельца *"
                             type="text"
                             name="name"
-                            value={state.name}
+                            value={stateForm.name}
                             onChange={handleChange}
                             fullWidth
                           />
@@ -124,7 +118,7 @@ function Profile({ token }) {
                               label="CVC *"
                               type="text"
                               name="cvc"
-                              value={state.cvc}
+                              value={stateForm.cvc}
                               onChange={handleChange}
                               fullWidth
                             />
@@ -133,7 +127,28 @@ function Profile({ token }) {
                       </Card>
                     </Grid>
                     <Grid item xs={12}>
-                      <BaseButton type="submit" content="Сохранить" />
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="flex-end"
+                        width="100%"
+                        mt={3}
+                      >
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          m="5px 0"
+                          color="#EB5757"
+                        >
+                          {error}
+                        </Box>
+                        <BaseButton
+                          type="submit"
+                          content="Сохранить"
+                          disabled={isLoading}
+                          bgcolor={isLoading ? 'text.disabled' : ''}
+                        />
+                      </Box>
                     </Grid>
                   </Grid>
                 </Box>
@@ -146,8 +161,5 @@ function Profile({ token }) {
   );
 }
 
-const mapStateToProps = (state) => ({
-  token: getToken(state),
-});
 
-export default connect(mapStateToProps)(Profile);
+export default (Profile);
