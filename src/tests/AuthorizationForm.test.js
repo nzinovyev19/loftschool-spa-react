@@ -4,9 +4,16 @@ import { render, fireEvent } from '@testing-library/react';
 import { AuthorizationForm } from 'components/AuthorizationForm/index';
 
 describe('AuthorizationForm.jsx', () => {
+  const props = {
+    setForm: jest.fn(),
+    token: '',
+    authorize: jest.fn(),
+    isLoading: false,
+  };
+
   it('change email input value', () => {
     const { getByPlaceholderText } = render(
-      <MemoryRouter><AuthorizationForm /></MemoryRouter>,
+      <MemoryRouter><AuthorizationForm {...props} /></MemoryRouter>,
     );
     const emailInput = getByPlaceholderText('Почта*');
 
@@ -16,7 +23,7 @@ describe('AuthorizationForm.jsx', () => {
   });
   it('change password input value', () => {
     const { getByPlaceholderText } = render(
-      <MemoryRouter><AuthorizationForm /></MemoryRouter>,
+      <MemoryRouter><AuthorizationForm {...props} /></MemoryRouter>,
     );
     const emailInput = getByPlaceholderText('Пароль*');
 
@@ -26,19 +33,18 @@ describe('AuthorizationForm.jsx', () => {
   });
   it('renders button for login', () => {
     const { getByTestId } = render(
-      <MemoryRouter><AuthorizationForm /></MemoryRouter>,
+      <MemoryRouter><AuthorizationForm {...props} /></MemoryRouter>,
     );
     expect(getByTestId('login-btn')).toBeTruthy();
   });
   it('trigger setPageFunc on button click', () => {
-    const setFormFunc = jest.fn();
     const { getByTestId } = render(
-      <MemoryRouter><AuthorizationForm setForm={setFormFunc} /></MemoryRouter>,
+      <MemoryRouter><AuthorizationForm {...props} /></MemoryRouter>,
     );
     const buttonRegistrate = getByTestId('registration-link');
 
     fireEvent.click(buttonRegistrate);
 
-    expect(setFormFunc).toHaveBeenCalled();
+    expect(props.setForm).toHaveBeenCalled();
   });
 });
