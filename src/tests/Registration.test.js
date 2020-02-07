@@ -1,21 +1,22 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { render, fireEvent } from '@testing-library/react';
-import Registration from 'views/Registration';
+
+import RegistrationForm from 'components/RegistrationForm/index';
 
 describe('Header.jsx', () => {
-  const setPageFunc = jest.fn();
-
   it('renders buttons value', () => {
-    const { getByText } = render(<Registration setPage={setPageFunc} />);
+    const { getByText } = render(<MemoryRouter><RegistrationForm /></MemoryRouter>);
     expect(getByText(/Регистрация/i)).toBeInTheDocument();
   });
 
-  it('trigger setPageFunc on button click', () => {
-    const { getByTestId } = render(<Registration setPage={setPageFunc} />);
+  it('trigger function on button click', () => {
+    const setFormFunc = jest.fn();
+    const { getByTestId } = render(<MemoryRouter><RegistrationForm setForm={setFormFunc} /></MemoryRouter>);
     const buttonRegistrate = getByTestId('login-link');
 
     fireEvent.click(buttonRegistrate);
 
-    expect(setPageFunc).toHaveBeenCalled();
+    expect(setFormFunc).toHaveBeenCalled();
   });
 });

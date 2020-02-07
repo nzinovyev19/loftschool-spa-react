@@ -1,1 +1,1 @@
-export { default } from './AuthorizationForm';
+export * from './AuthorizationForm';

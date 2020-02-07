@@ -33,7 +33,7 @@ AuthorizationForm.defaultProps = {
   error: null,
 };
 
-function AuthorizationForm(props) {
+export function AuthorizationForm(props) {
   const [state, setState] = React.useState({
     email: '',
     password: '',

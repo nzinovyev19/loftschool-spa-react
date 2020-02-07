@@ -23,7 +23,7 @@ Header.propTypes = {
   logout: PropTypes.func.isRequired,
 };
 
-function Header({ logout }) {
+export function Header({ logout }) {
   const classes = useStyles();
   const history = useHistory();
 
