@@ -30,9 +30,10 @@ export default function ProfileInfo() {
         mt={2}
       >
         <BaseButton
-          onClick={() => history.push('/profile')}
           fullWidth
           content="Перейти в профиль"
+          data-testid="profile-btn"
+          onClick={() => history.push('/profile')}
         />
       </Box>
     </Box>
