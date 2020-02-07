@@ -33,33 +33,32 @@ export default function TravelInfo() {
     >
       <Box>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Откуда</InputLabel>
+          <InputLabel>Откуда</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
             name="from"
+            placeholder="Откуда"
             value={address.from}
             onChange={handleChange}
             fullWidth
           >
-            <MenuItem value={10}>Пушкина</MenuItem>
-            <MenuItem value={20}>Колотушкина</MenuItem>
-            <MenuItem value={30}>Пучачо</MenuItem>
+            <MenuItem value="Пушкина">Пушкина</MenuItem>
+            <MenuItem value="Колотушкина">Колотушкина</MenuItem>
+            <MenuItem value="Пучачо">Пучачо</MenuItem>
           </Select>
         </FormControl>
       </Box>
       <Box mt={3}>
         <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Куда</InputLabel>
+          <InputLabel>Куда</InputLabel>
           <Select
-            labelId="demo-simple-select-label"
             name="to"
             value={address.to}
             onChange={handleChange}
             fullWidth
           >
-            <MenuItem value={10}>Пушкина</MenuItem>
-            <MenuItem value={20}>Колотушкина</MenuItem>
-            <MenuItem value={30}>Пучачо</MenuItem>
+            <MenuItem value="Пушкина">Пушкина</MenuItem>
+            <MenuItem value="Колотушкина">Колотушкина</MenuItem>
+            <MenuItem value="Пучачо">Пучачо</MenuItem>
           </Select>
         </FormControl>
       </Box>
