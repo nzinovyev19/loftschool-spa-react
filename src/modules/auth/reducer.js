@@ -7,17 +7,17 @@ import {
   logout,
 } from './actions';
 
-const token = handleActions({
+export const token = handleActions({
   [logout]: () => '',
   [authorizeSuccess]: (_state, action) => action.payload,
 }, '');
 
-const error = handleActions({
+export const error = handleActions({
   [authorize]: () => null,
   [authorizeFailure]: (_state, action) => action.payload,
 }, null);
 
-const isLoading = handleActions({
+export const isLoading = handleActions({
   [authorize]: () => true,
   [authorizeSuccess]: () => false,
   [authorizeFailure]: () => false,
