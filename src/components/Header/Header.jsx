@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { logout } from 'modules/auth/actions';
 import { Logo } from 'loft-taxi-mui-theme';
 import { makeStyles } from '@material-ui/core/styles';
-import { AuthContext } from 'context/Auth';
 
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -18,12 +20,12 @@ const useStyles = makeStyles({
 });
 
 Header.propTypes = {
-  setPage: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
 };
 
-export default function Header({ setPage }) {
+export function Header({ logout }) {
   const classes = useStyles();
-  const { logout } = React.useContext(AuthContext);
+  const history = useHistory();
 
   const buttons = [
     {
@@ -38,7 +40,6 @@ export default function Header({ setPage }) {
 
   function logoutHandler(e) {
     logout();
-    setPage('login');
   }
 
   return (
@@ -63,7 +64,7 @@ export default function Header({ setPage }) {
               <Button
                 key={button.value}
                 data-testid={button.value}
-                onClick={() => setPage(button.value)}
+                onClick={() => history.push(button.value)}
               >
                 {button.text}
               </Button>
@@ -75,3 +76,7 @@ export default function Header({ setPage }) {
     </header>
   );
 }
+
+const mapDispatchToProps = { logout };
+
+export default connect(null, mapDispatchToProps)(Header);

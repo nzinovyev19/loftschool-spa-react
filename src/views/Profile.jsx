@@ -1,11 +1,13 @@
-import 'date-fns';
-import React, { useEffect, useContext, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { MCIcon } from 'loft-taxi-mui-theme';
+import { setProfile } from 'modules/profile/actions';
+import { getToken } from 'modules/auth/selectors';
 import BaseButton from 'components/BaseButton';
 import BaseBackgroundWrap from 'components/BaseBackgroundWrap';
-import { AuthContext } from 'context/Auth';
 
+import 'date-fns';
 import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -15,36 +17,43 @@ import Typography from '@material-ui/core/Typography';
 import DateFnsUtils from '@date-io/date-fns';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 
-Profile.propTypes = {
-  setPage: PropTypes.func.isRequired,
-};
-
-export default function Profile({ setPage }) {
-  const [state, setState] = useState({
+function Profile() {
+  const [stateForm, setStateForm] = useState({
     cardNumber: '',
-    date: new Date(),
-    name: '',
+    expiryDate: new Date(),
+    cardName: '',
     cvc: '',
   });
-  const { isAuthorized, logout } = useContext(AuthContext);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const token = useSelector((state) => getToken(state));
+  const {
+    error,
+    isLoading,
+    isLoaded,
+    info,
+  } = useSelector((state) => state.profile);
 
   useEffect(() => {
-    if (!isAuthorized) {
-      logout();
-      setPage('login');
+    if (info) {
+      setStateForm({
+        cardNumber: info.cardNumber,
+        expiryDate: info.expiryDate,
+        cardName: info.cardName,
+        cvc: info.cvc,
+      });
     }
-  });
+  }, [info]);
 
   function handleSubmit(e) {
     e.preventDefault();
-    // TODO: setPage on map
-    console.log(state);
+    dispatch(setProfile({ ...stateForm, token }));
   }
 
   function handleChange(e) {
     const { value } = e.target;
-    setState({
-      ...state,
+    setStateForm({
+      ...stateForm,
       [e.target.name]: value,
     });
   }
@@ -91,18 +100,18 @@ export default function Profile({ setPage }) {
                             name="cardNumber"
                             label="Номер карты*"
                             fullWidth
-                            value={state.cardNumber}
+                            value={stateForm.cardNumber}
                             onChange={handleChange}
                           />
                           <Box mt={2}>
                             <DatePicker
-                              name="date"
+                              name="expiryDate"
                               views={['year', 'month']}
                               label="Срок действия *"
                               format="MM/yy"
                               disabled
                               fullWidth
-                              value={state.date}
+                              value={stateForm.expiryDate}
                               onChange={handleChange}
                             />
                           </Box>
@@ -115,8 +124,8 @@ export default function Profile({ setPage }) {
                           <TextField
                             label="Имя владельца *"
                             type="text"
-                            name="name"
-                            value={state.name}
+                            name="cardName"
+                            value={stateForm.cardName}
                             onChange={handleChange}
                             fullWidth
                           />
@@ -125,7 +134,7 @@ export default function Profile({ setPage }) {
                               label="CVC *"
                               type="text"
                               name="cvc"
-                              value={state.cvc}
+                              value={stateForm.cvc}
                               onChange={handleChange}
                               fullWidth
                             />
@@ -134,7 +143,40 @@ export default function Profile({ setPage }) {
                       </Card>
                     </Grid>
                     <Grid item xs={12}>
-                      <BaseButton type="submit" content="Сохранить" />
+                      <Box
+                        display="flex"
+                        flexDirection="column"
+                        justifyContent="flex-end"
+                        width="100%"
+                        mt={3}
+                      >
+                        <Box
+                          display="flex"
+                          justifyContent="flex-end"
+                          m="5px 0"
+                          color="#EB5757"
+                        >
+                          {error}
+                        </Box>
+                        <BaseButton
+                          type="submit"
+                          content="Сохранить"
+                          disabled={isLoading}
+                          bgcolor={isLoading ? 'text.disabled' : ''}
+                        />
+                        {isLoaded && (
+                          <Box
+                            width="100%"
+                            mt={2}
+                          >
+                            <BaseButton
+                              fullWidth
+                              content="Перейти на карту"
+                              onClick={() => history.push('/map')}
+                            />
+                          </Box>
+                        )}
+                      </Box>
                     </Grid>
                   </Grid>
                 </Box>
@@ -146,3 +188,6 @@ export default function Profile({ setPage }) {
     </BaseBackgroundWrap>
   );
 }
+
+
+export default (Profile);

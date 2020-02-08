@@ -1,5 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { useRouteMatch, useHistory } from 'react-router-dom';
+import { getToken } from 'modules/auth/selectors';
+
 import { Logo } from 'loft-taxi-mui-theme';
 import RegistrationForm from 'components/RegistrationForm';
 import AuthorizationForm from 'components/AuthorizationForm';
@@ -9,21 +12,14 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 
-const views = {
-  registration: function registration(setForm, setPage) {
-    return <RegistrationForm setForm={setForm} setPage={setPage} />;
-  },
-  authorization: function authorization(setForm, setPage) {
-    return <AuthorizationForm setForm={setForm} setPage={setPage} />;
-  },
-};
+export default function Login() {
+  const authMatch = useRouteMatch('/authorization');
+  const history = useHistory();
+  const token = useSelector((state) => getToken(state));
 
-Login.propTypes = {
-  setPage: PropTypes.func.isRequired,
-};
-
-export default function Login({ setPage }) {
-  const [form, setForm] = React.useState('authorization');
+  React.useEffect(() => {
+    if (token) history.push('/map');
+  });
 
   return (
     <Box
@@ -46,7 +42,11 @@ export default function Login({ setPage }) {
               </Box>
             </Grid>
             <Grid item xs={5}>
-              {views[form](setForm, setPage)}
+              {
+                authMatch
+                  ? <AuthorizationForm />
+                  : <RegistrationForm />
+              }
             </Grid>
           </Grid>
         </Container>

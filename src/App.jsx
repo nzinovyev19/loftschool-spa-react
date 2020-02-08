@@ -1,50 +1,60 @@
 import React from 'react';
-import { AuthConsumer, MemoizedAuthProvider } from 'context/Auth';
+import {
+  BrowserRouter,
+  Redirect,
+  Switch,
+  Route,
+} from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getToken } from 'modules/auth/selectors';
 import Header from 'components/Header';
 import Box from '@material-ui/core/Box';
 import { theme } from 'loft-taxi-mui-theme';
-import { ThemeProvider, styled } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 
 import Map from 'views/Map';
 import Login from 'views/Login';
 import Profile from 'views/Profile';
+import BasePrivateRoute from 'components/BasePrivateRoute';
 
-const views = {
-  map: function map(setPage) { return <Map setPage={setPage} />; },
-  login: function login(setPage) { return <Login setPage={setPage} />; },
-  profile: function profile(setPage) { return <Profile setPage={setPage} />; },
+App.propTypes = {
+  token: PropTypes.string.isRequired,
 };
 
-const Main = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  height: '100vh',
-  minHeight: 600,
-});
-
-
-function App() {
-  const [page, setPage] = React.useState('login');
-
+function App({ token }) {
   return (
-    <ThemeProvider theme={theme}>
-      <MemoizedAuthProvider>
+    <BrowserRouter>
+      <ThemeProvider theme={theme}>
         <Box
           display="flex"
           flexDirection="column"
           width="100%"
-          height="100%"
+          height="100vh"
+          minHeight={600}
         >
-          <AuthConsumer>
-            {({ isAuthorized }) => (isAuthorized ? <Header setPage={setPage} /> : null)}
-          </AuthConsumer>
-          <Main>
-            {views[page](setPage)}
-          </Main>
+          {token ? <Header /> : null}
+          <Switch>
+            <Route
+              path="/authorization"
+              component={Login}
+            />
+            <Route
+              path="/registration"
+              component={Login}
+            />
+            <BasePrivateRoute path="/map" component={Map} />
+            <BasePrivateRoute path="/profile" component={Profile} />
+            <Redirect from="/" to="/authorization" />
+          </Switch>
         </Box>
-      </MemoizedAuthProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  token: getToken(state),
+});
+
+export default connect(mapStateToProps)(App);
