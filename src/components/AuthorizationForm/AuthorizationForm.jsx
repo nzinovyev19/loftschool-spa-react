@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { authorize } from 'modules/auth/actions';
+import { authorizeRequest } from 'modules/auth/actions';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getIsLoading, getError, getToken } from 'modules/auth/selectors';
@@ -25,7 +25,7 @@ AuthorizationForm.propTypes = {
   setForm: PropTypes.func.isRequired,
   error: PropTypes.string,
   token: PropTypes.string.isRequired,
-  authorize: PropTypes.func.isRequired,
+  authorizeRequest: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
 };
 
@@ -43,12 +43,12 @@ export function AuthorizationForm(props) {
     isLoading,
     error,
     token,
-    authorize,
+    authorizeRequest,
   } = props;
 
   function handleSubmit(e) {
     e.preventDefault();
-    authorize({ email: state.email, password: state.password });
+    authorizeRequest({ email: state.email, password: state.password });
   }
 
   function handleChange(e) {
@@ -150,7 +150,7 @@ const mapStateToProps = (state) => ({
   isLoading: getIsLoading(state),
 });
 
-const mapDispatchToProps = { authorize };
+const mapDispatchToProps = { authorizeRequest };
 
 export default connect(
   mapStateToProps,

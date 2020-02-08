@@ -1,7 +1,7 @@
-import { authorize, authorizeSuccess, authorizeFailure } from 'modules/auth/actions';
+import { authorizeRequest, authorizeRequestSuccess, authorizeRequestFailure } from 'modules/auth/actions';
 
 const authMiddleware = (store) => (next) => (action) => {
-  if (action.type === authorize.toString()) {
+  if (action.type === authorizeRequest.toString()) {
     fetch(
       'https://loft-taxi.glitch.me/auth',
       {
@@ -12,10 +12,10 @@ const authMiddleware = (store) => (next) => (action) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        if (!data.success) return store.dispatch(authorizeFailure(data.error));
-        return store.dispatch(authorizeSuccess(data.token));
+        if (!data.success) return store.dispatch(authorizeRequestFailure(data.error));
+        return store.dispatch(authorizeRequestSuccess(data.token));
       })
-      .catch((error) => store.dispatch(authorizeFailure(error.message)));
+      .catch((error) => store.dispatch(authorizeRequestFailure(error.message)));
   }
   next(action);
 };

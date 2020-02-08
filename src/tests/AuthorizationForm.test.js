@@ -7,7 +7,7 @@ describe('AuthorizationForm.jsx', () => {
   const props = {
     setForm: jest.fn(),
     token: '',
-    authorize: jest.fn(),
+    authorizeRequest: jest.fn(),
     isLoading: false,
   };
 

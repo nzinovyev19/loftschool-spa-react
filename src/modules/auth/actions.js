@@ -1,6 +1,6 @@
 import { createAction } from 'redux-actions';
 
 export const logout = createAction('LOGOUT');
-export const authorize = createAction('AUTHORIZE');
-export const authorizeSuccess = createAction('AUTHORIZE_SUCCESS');
-export const authorizeFailure = createAction('AUTHORIZE_FAILURE');
+export const authorizeRequest = createAction('AUTHORIZE');
+export const authorizeRequestSuccess = createAction('AUTHORIZE_SUCCESS');
+export const authorizeRequestFailure = createAction('AUTHORIZE_FAILURE');

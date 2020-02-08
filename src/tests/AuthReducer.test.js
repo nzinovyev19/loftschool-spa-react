@@ -10,7 +10,7 @@ describe('AuthReducer', () => {
       };
       expect(token({ token: 'asdasd' }, action)).toBe('');
     });
-    it('Create token when authorize', () => {
+    it('Create token when authorizeRequest', () => {
       action = {
         type: 'AUTHORIZE_SUCCESS',
         payload: 'assdasdad',
@@ -20,19 +20,19 @@ describe('AuthReducer', () => {
   });
 
   describe('isLoading property should changed', () => {
-    it('isLoading property - true, when authorize', () => {
+    it('isLoading property - true, when authorizeRequest', () => {
       action = {
         type: 'AUTHORIZE',
       };
       expect(isLoading({ isLoading: false }, action)).toBe(true);
     });
-    it('isLoading property - false, when authorize success', () => {
+    it('isLoading property - false, when authorizeRequest success', () => {
       action = {
         type: 'AUTHORIZE_SUCCESS',
       };
       expect(isLoading({ isLoading: true }, action)).toBe(false);
     });
-    it('isLoading property - false, when authorize failure', () => {
+    it('isLoading property - false, when authorizeRequest failure', () => {
       action = {
         type: 'AUTHORIZE_FAILURE',
       };
@@ -41,13 +41,13 @@ describe('AuthReducer', () => {
   });
 
   describe('error property should change', () => {
-    it('error property when authorize', () => {
+    it('error property when authorizeRequest', () => {
       action = {
         type: 'AUTHORIZE',
       };
       expect(error({ error: 'Ошибка' }, action)).toBe(null);
     });
-    it('error property when authorize', () => {
+    it('error property when authorizeRequest', () => {
       action = {
         type: 'AUTHORIZE_FAILURE',
         payload: 'Ошибка',
