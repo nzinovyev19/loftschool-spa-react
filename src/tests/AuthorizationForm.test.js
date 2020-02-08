@@ -37,14 +37,4 @@ describe('AuthorizationForm.jsx', () => {
     );
     expect(getByTestId('login-btn')).toBeTruthy();
   });
-  it('trigger setPageFunc on button click', () => {
-    const { getByTestId } = render(
-      <MemoryRouter><AuthorizationForm {...props} /></MemoryRouter>,
-    );
-    const buttonRegistrate = getByTestId('registration-link');
-
-    fireEvent.click(buttonRegistrate);
-
-    expect(props.setForm).toHaveBeenCalled();
-  });
 });

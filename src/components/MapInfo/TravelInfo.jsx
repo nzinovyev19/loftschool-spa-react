@@ -52,6 +52,7 @@ export default function TravelInfo() {
           <InputLabel>Куда</InputLabel>
           <Select
             name="to"
+            placeholder="Куда"
             value={address.to}
             onChange={handleChange}
             fullWidth

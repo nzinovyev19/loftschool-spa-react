@@ -1,23 +1,23 @@
 import React from 'react';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import rootReducer from 'modules/';
 
 import RegistrationForm from 'components/RegistrationForm/index';
 
 describe('Header.jsx', () => {
-  const setFormFunc = jest.fn();
+  const store = createStore(
+    rootReducer,
+  );
 
   it('renders buttons value', () => {
-    const { getByText } = render(<MemoryRouter><RegistrationForm setForm={setFormFunc} /></MemoryRouter>);
+    const { getByText } = render(
+      <Provider store={store}>
+        <MemoryRouter><RegistrationForm /></MemoryRouter>
+      </Provider>,
+    );
     expect(getByText(/Регистрация/i)).toBeInTheDocument();
-  });
-
-  it('trigger function on button click', () => {
-    const { getByTestId } = render(<MemoryRouter><RegistrationForm setForm={setFormFunc} /></MemoryRouter>);
-    const buttonRegistrate = getByTestId('login-link');
-
-    fireEvent.click(buttonRegistrate);
-
-    expect(setFormFunc).toHaveBeenCalled();
   });
 });
