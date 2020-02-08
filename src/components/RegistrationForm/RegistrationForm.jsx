@@ -1,6 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { registrationRequest } from 'modules/auth/actions';
+import { getError, getIsLoading } from 'modules/auth/selectors';
 import BaseButton from 'components/BaseButton';
 
 import Box from '@material-ui/core/Box';
@@ -21,18 +23,20 @@ const Form = styled(Box)({
 });
 
 export default function RegistrationForm() {
-  const [state, setState] = React.useState({
+  const [stateForm, setStateForm] = React.useState({
     email: '',
     name: '',
-    secondName: '',
+    surname: '',
     password: '',
   });
   const history = useHistory();
+  const dispatch = useDispatch();
+  const error = useSelector((state) => getError(state));
+  const isLoading = useSelector((state) => getIsLoading(state));
 
   function handleSubmit(e) {
     e.preventDefault();
-    history.push('/map');
-    console.log(state);
+    dispatch(registrationRequest({ ...stateForm }));
   }
 
   function pushOnAuthorizationForm(e) {
@@ -42,8 +46,8 @@ export default function RegistrationForm() {
 
   function handleChange(e) {
     const { value } = e.target;
-    setState({
-      ...state,
+    setStateForm({
+      ...stateForm,
       [e.target.name]: value,
     });
   }
@@ -82,7 +86,7 @@ export default function RegistrationForm() {
           type="email"
           name="email"
           fullWidth
-          value={state.email}
+          value={stateForm.email}
           onChange={handleChange}
         />
       </Box>
@@ -97,7 +101,7 @@ export default function RegistrationForm() {
               type="text"
               name="name"
               fullWidth
-              value={state.name}
+              value={stateForm.name}
               onChange={handleChange}
             />
           </Grid>
@@ -105,9 +109,9 @@ export default function RegistrationForm() {
             <TextField
               label="Фамилия*"
               type="text"
-              name="secondName"
+              name="surname"
               fullWidth
-              value={state.secondName}
+              value={stateForm.surname}
               onChange={handleChange}
             />
           </Grid>
@@ -122,19 +126,30 @@ export default function RegistrationForm() {
           type="password"
           name="password"
           fullWidth
-          value={state.password}
+          value={stateForm.password}
           onChange={handleChange}
         />
       </Box>
       <Box
         display="flex"
+        flexDirection="column"
         justifyContent="flex-end"
         width="100%"
         mt={3}
       >
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          m="5px 0"
+          color="#EB5757"
+        >
+          {error}
+        </Box>
         <BaseButton
           type="submit"
           content="Зарегистрироваться"
+          disabled={isLoading}
+          bgcolor={isLoading ? 'text.disabled' : ''}
         />
       </Box>
     </Form>
