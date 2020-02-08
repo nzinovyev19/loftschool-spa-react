@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { MCIcon } from 'loft-taxi-mui-theme';
 import { setProfile } from 'modules/profile/actions';
+import { getToken } from 'modules/auth/selectors';
 import BaseButton from 'components/BaseButton';
 import BaseBackgroundWrap from 'components/BaseBackgroundWrap';
 
@@ -19,19 +20,34 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 function Profile() {
   const [stateForm, setStateForm] = useState({
     cardNumber: '',
-    date: new Date(),
-    name: '',
+    expiryDate: new Date(),
+    cardName: '',
     cvc: '',
   });
   const history = useHistory();
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.auth);
-  const { error, isLoading } = useSelector((state) => state.profile);
+  const token = useSelector((state) => getToken(state));
+  const {
+    error,
+    isLoading,
+    isLoaded,
+    info,
+  } = useSelector((state) => state.profile);
+
+  useEffect(() => {
+    if (info) {
+      setStateForm({
+        cardNumber: info.cardNumber,
+        expiryDate: info.expiryDate,
+        cardName: info.cardName,
+        cvc: info.cvc,
+      });
+    }
+  }, [info]);
 
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(setProfile({ ...stateForm, token }));
-    history.push('/map');
   }
 
   function handleChange(e) {
@@ -89,13 +105,13 @@ function Profile() {
                           />
                           <Box mt={2}>
                             <DatePicker
-                              name="date"
+                              name="expiryDate"
                               views={['year', 'month']}
                               label="Срок действия *"
                               format="MM/yy"
                               disabled
                               fullWidth
-                              value={stateForm.date}
+                              value={stateForm.expiryDate}
                               onChange={handleChange}
                             />
                           </Box>
@@ -108,8 +124,8 @@ function Profile() {
                           <TextField
                             label="Имя владельца *"
                             type="text"
-                            name="name"
-                            value={stateForm.name}
+                            name="cardName"
+                            value={stateForm.cardName}
                             onChange={handleChange}
                             fullWidth
                           />
@@ -148,6 +164,18 @@ function Profile() {
                           disabled={isLoading}
                           bgcolor={isLoading ? 'text.disabled' : ''}
                         />
+                        {isLoaded && (
+                          <Box
+                            width="100%"
+                            mt={2}
+                          >
+                            <BaseButton
+                              fullWidth
+                              content="Перейти на карту"
+                              onClick={() => history.push('/map')}
+                            />
+                          </Box>
+                        )}
                       </Box>
                     </Grid>
                   </Grid>
