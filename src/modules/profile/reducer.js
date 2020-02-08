@@ -8,6 +8,7 @@ export const info = handleActions({
 
 export const error = handleActions({
   [setProfile]: () => null,
+  [setProfileSuccess]: () => null,
   [setProfileFailure]: (state, action) => action.payload,
 }, null);
 
@@ -17,8 +18,15 @@ const isLoading = handleActions({
   [setProfileFailure]: () => false,
 }, false);
 
+const isLoaded = handleActions({
+  [setProfile]: () => false,
+  [setProfileSuccess]: () => true,
+  [setProfileFailure]: () => false,
+}, false);
+
 export default combineReducers({
-  error,
   info,
+  error,
+  isLoaded,
   isLoading,
 });

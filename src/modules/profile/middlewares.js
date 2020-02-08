@@ -13,7 +13,7 @@ const profileMiddleware = (store) => (next) => (action) => {
       .then((response) => response.json())
       .then((data) => {
         if (!data.success) return store.dispatch(setProfileFailure(data.error));
-        return store.dispatch(setProfileSuccess(data.token));
+        return store.dispatch(setProfileSuccess());
       })
       .catch((error) => store.dispatch(setProfileFailure(error.message)));
   }

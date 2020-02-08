@@ -1,26 +1,29 @@
 import { handleActions } from 'redux-actions';
 import { combineReducers } from 'redux';
 import {
+  registrationRequest,
   authorizeRequest,
-  authorizeRequestSuccess,
-  authorizeRequestFailure,
+  requestSuccess,
+  requestFailure,
   logout,
 } from './actions';
 
 export const token = handleActions({
   [logout]: () => '',
-  [authorizeRequestSuccess]: (_state, action) => action.payload,
+  [requestSuccess]: (_state, action) => action.payload,
 }, '');
 
 export const error = handleActions({
+  [registrationRequest]: () => null,
   [authorizeRequest]: () => null,
-  [authorizeRequestFailure]: (_state, action) => action.payload,
+  [requestFailure]: (_state, action) => action.payload,
 }, null);
 
 export const isLoading = handleActions({
+  [registrationRequest]: () => true,
   [authorizeRequest]: () => true,
-  [authorizeRequestSuccess]: () => false,
-  [authorizeRequestFailure]: () => false,
+  [requestSuccess]: () => false,
+  [requestFailure]: () => false,
 }, false);
 
 export default combineReducers({

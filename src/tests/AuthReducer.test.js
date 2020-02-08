@@ -12,7 +12,7 @@ describe('AuthReducer', () => {
     });
     it('Create token when authorizeRequest', () => {
       action = {
-        type: 'AUTHORIZE_REQUEST_SUCCESS',
+        type: 'REQUEST_SUCCESS',
         payload: 'assdasdad',
       };
       expect(token({ token: '' }, action)).toBe(action.payload);
@@ -28,28 +28,28 @@ describe('AuthReducer', () => {
     });
     it('isLoading property - false, when authorizeRequest success', () => {
       action = {
-        type: 'AUTHORIZE_REQUEST_SUCCESS',
+        type: 'REQUEST_SUCCESS',
       };
       expect(isLoading({ isLoading: true }, action)).toBe(false);
     });
     it('isLoading property - false, when authorizeRequest failure', () => {
       action = {
-        type: 'AUTHORIZE_REQUEST_FAILURE',
+        type: 'REQUEST_FAILURE',
       };
       expect(isLoading({ isLoading: true }, action)).toBe(false);
     });
   });
 
   describe('error property should change', () => {
-    it('error property when authorizeRequest', () => {
+    it('error property when request', () => {
       action = {
         type: 'AUTHORIZE_REQUEST',
       };
       expect(error({ error: 'Ошибка' }, action)).toBe(null);
     });
-    it('error property when authorizeRequest', () => {
+    it('error property when request', () => {
       action = {
-        type: 'AUTHORIZE_REQUEST_FAILURE',
+        type: 'REQUEST_FAILURE',
         payload: 'Ошибка',
       };
       expect(error({ error: null }, action)).toBe(action.payload);

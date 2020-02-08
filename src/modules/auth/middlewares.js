@@ -1,4 +1,9 @@
-import { authorizeRequest, authorizeRequestSuccess, authorizeRequestFailure } from 'modules/auth/actions';
+import {
+  authorizeRequest,
+  registrationRequest,
+  requestSuccess,
+  requestFailure,
+} from 'modules/auth/actions';
 
 const authMiddleware = (store) => (next) => (action) => {
   if (action.type === authorizeRequest.toString()) {
@@ -12,10 +17,26 @@ const authMiddleware = (store) => (next) => (action) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        if (!data.success) return store.dispatch(authorizeRequestFailure(data.error));
-        return store.dispatch(authorizeRequestSuccess(data.token));
+        if (!data.success) return store.dispatch(requestFailure(data.error));
+        return store.dispatch(requestSuccess(data.token));
       })
-      .catch((error) => store.dispatch(authorizeRequestFailure(error.message)));
+      .catch((error) => store.dispatch(requestFailure(error.message)));
+  }
+  if (action.type === registrationRequest.toString()) {
+    fetch(
+      'https://loft-taxi.glitch.me/register',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        body: JSON.stringify(action.payload),
+      },
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.success) return store.dispatch(requestFailure(data.error));
+        return store.dispatch(requestSuccess(data.token));
+      })
+      .catch((error) => store.dispatch(requestFailure(error.message)));
   }
   next(action);
 };
