@@ -56,7 +56,7 @@ function Map({ token }) {
             <Box
               position="absolute"
               top="10%"
-              width="300px"
+              width="350px"
               p={5}
               bgcolor="#FFF"
               zIndex="2"
