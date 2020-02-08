@@ -36,13 +36,16 @@ function App({ token }) {
           {token ? <Header /> : null}
           <Switch>
             <Route
-              path="/"
-              exact
+              path="/authorization"
+              component={Login}
+            />
+            <Route
+              path="/registration"
               component={Login}
             />
             <BasePrivateRoute path="/map" component={Map} />
             <BasePrivateRoute path="/profile" component={Profile} />
-            <Redirect to="/" />
+            <Redirect from="/" to="/authorization" />
           </Switch>
         </Box>
       </ThemeProvider>

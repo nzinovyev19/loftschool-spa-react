@@ -22,7 +22,6 @@ const Form = styled(Box)({
 });
 
 AuthorizationForm.propTypes = {
-  setForm: PropTypes.func.isRequired,
   error: PropTypes.string,
   token: PropTypes.string.isRequired,
   authorizeRequest: PropTypes.func.isRequired,
@@ -49,6 +48,11 @@ export function AuthorizationForm(props) {
   function handleSubmit(e) {
     e.preventDefault();
     authorizeRequest({ email: state.email, password: state.password });
+  }
+
+  function pushOnRegisrtationForm(e) {
+    e.preventDefault();
+    history.push('/registration');
   }
 
   function handleChange(e) {
@@ -82,7 +86,7 @@ export function AuthorizationForm(props) {
         {' '}
         <Link
           href="#"
-          onClick={() => props.setForm('registration')}
+          onClick={pushOnRegisrtationForm}
           data-testid="registration-link"
         >
           Зарегистрируйтесь

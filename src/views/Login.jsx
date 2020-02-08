@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouteMatch } from 'react-router-dom';
 import { Logo } from 'loft-taxi-mui-theme';
 import RegistrationForm from 'components/RegistrationForm';
 import AuthorizationForm from 'components/AuthorizationForm';
@@ -8,17 +9,8 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 
-const views = {
-  registration: function registration(setForm) {
-    return <RegistrationForm setForm={setForm} />;
-  },
-  authorization: function authorization(setForm) {
-    return <AuthorizationForm setForm={setForm} />;
-  },
-};
-
 export default function Login() {
-  const [form, setForm] = React.useState('authorization');
+  const authMatch = useRouteMatch('/authorization');
 
   return (
     <Box
@@ -41,7 +33,11 @@ export default function Login() {
               </Box>
             </Grid>
             <Grid item xs={5}>
-              {views[form](setForm)}
+              {
+                authMatch
+                  ? <AuthorizationForm />
+                  : <RegistrationForm />
+              }
             </Grid>
           </Grid>
         </Container>

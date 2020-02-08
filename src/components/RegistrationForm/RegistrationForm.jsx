@@ -20,11 +20,7 @@ const Form = styled(Box)({
   backgroundColor: '#FFFFFF',
 });
 
-RegistrationForm.propTypes = {
-  setForm: PropTypes.func.isRequired,
-};
-
-export default function RegistrationForm({ setForm }) {
+export default function RegistrationForm() {
   const [state, setState] = React.useState({
     email: '',
     name: '',
@@ -37,6 +33,11 @@ export default function RegistrationForm({ setForm }) {
     e.preventDefault();
     history.push('/map');
     console.log(state);
+  }
+
+  function pushOnAuthorizationForm(e) {
+    e.preventDefault();
+    history.push('/authorization');
   }
 
   function handleChange(e) {
@@ -67,7 +68,7 @@ export default function RegistrationForm({ setForm }) {
         <Link
           href="#"
           data-testid="login-link"
-          onClick={() => setForm('authorization')}
+          onClick={pushOnAuthorizationForm}
         >
           Войти
         </Link>
