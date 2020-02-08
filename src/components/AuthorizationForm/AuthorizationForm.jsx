@@ -23,7 +23,6 @@ const Form = styled(Box)({
 
 AuthorizationForm.propTypes = {
   error: PropTypes.string,
-  token: PropTypes.string.isRequired,
   authorizeRequest: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
 };
@@ -41,7 +40,6 @@ export function AuthorizationForm(props) {
   const {
     isLoading,
     error,
-    token,
     authorizeRequest,
   } = props;
 
@@ -62,10 +60,6 @@ export function AuthorizationForm(props) {
       [e.target.name]: value,
     });
   }
-
-  React.useEffect(() => {
-    if (token) history.push('/map');
-  });
 
   return (
     <Form
