@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { connect, useSelector } from 'react-redux';
-import { getToken } from 'modules/auth/selectors';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
+
 import TravelInfo from 'components/MapInfo/TravelInfo';
 import ProfileInfo from 'components/MapInfo/ProfileInfo';
 
@@ -12,11 +11,7 @@ import Container from '@material-ui/core/Container';
 
 Mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
-Map.propTypes = {
-  token: PropTypes.string.isRequired,
-};
-
-function Map({ token }) {
+function Map() {
   const [mapOptions] = useState({
     lng: 49.1315,
     lat: 55.7824,
@@ -29,11 +24,11 @@ function Map({ token }) {
     bottom: 0,
     width: '100%',
   };
-  let mapContainer;
+  const mapContainerRef = useRef(null);
 
   useEffect(() => {
     const map = new Mapboxgl.Map({
-      container: mapContainer,
+      container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [mapOptions.lng, mapOptions.lat],
       zoom: mapOptions.zoom,
@@ -41,7 +36,7 @@ function Map({ token }) {
     return () => {
       map.remove();
     };
-  });
+  }, [mapOptions]);
 
   return (
     <Box
@@ -66,13 +61,9 @@ function Map({ token }) {
           </Grid>
         </Grid>
       </Container>
-      <div style={style} ref={(el) => { mapContainer = el; }} />
+      <div style={style} ref={mapContainerRef} />
     </Box>
   );
 }
 
-const mapStateToProps = (state) => ({
-  token: getToken(state),
-});
-
-export default connect(mapStateToProps)(Map);
+export default Map;
