@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import BaseButton from 'components/BaseButton';
+import { getIsLoading } from 'modules/route/selectors';
+import { fetchRouteRequest } from 'modules/route/actions';
 import { fetchAddressesRequest } from 'modules/addresses/actions';
 
 import Box from '@material-ui/core/Box';
@@ -15,6 +17,7 @@ export default function TravelInfo() {
     to: '',
   });
   const { addresses, error, isLoading } = useSelector((state) => state.addresses);
+  const routeIsLoading = useSelector((state) => getIsLoading(state));
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -23,7 +26,7 @@ export default function TravelInfo() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(addressesForm);
+    dispatch(fetchRouteRequest(addressesForm));
   };
 
   const handleChange = (e) => {
@@ -95,8 +98,8 @@ export default function TravelInfo() {
           fullWidth
           type="submit"
           content="Вызвать такси"
-          disabled={isLoading}
-          bgcolor={isLoading ? 'text.disabled' : ''}
+          disabled={routeIsLoading || !addressesForm.from || !addressesForm.to}
+          bgcolor={routeIsLoading ? 'text.disabled' : ''}
         />
       </Box>
     </Box>
