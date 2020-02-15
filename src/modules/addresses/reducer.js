@@ -2,7 +2,7 @@ import { fetchAddressesRequest, fetchAddressesFailure, fetchAddressesSuccess } f
 
 const initialState = {
   error: null,
-  loading: false,
+  isLoading: false,
   addresses: [],
 };
 
@@ -13,21 +13,21 @@ export default function reducer(state = initialState, action) {
     case fetchAddressesRequest.toString():
       return {
         ...state,
-        loading: true,
+        isLoading: true,
         error: null,
       };
     case fetchAddressesSuccess.toString():
       return {
         ...state,
         error: null,
-        loading: false,
+        isLoading: false,
         addresses: payload,
       };
     case fetchAddressesFailure.toString():
       return {
         ...state,
         error: payload,
-        loading: false,
+        isLoading: false,
       };
     default:
       return state;
