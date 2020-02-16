@@ -9,54 +9,30 @@ import {
   requestSuccess,
   requestFailure,
 } from 'modules/auth/actions';
+import {
+  authorize,
+  registrate,
+} from 'modules/auth/api';
 
-const authorize = (action) => fetch(
-  'https://loft-taxi.glitch.me/auth',
-  {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    body: JSON.stringify(action.payload),
-  },
-)
-.then((response) => response.json())
-.then((data) => {
-  if (data.success) {
-    return data;
+export function* authorizeRequestSaga(action) {
+  try {
+    const { token } = yield call(authorize, action);
+    yield put(requestSuccess(token));
+  } catch (e) {
+    yield put(requestFailure(e.message));
   }
-  throw new Error(data.error);
-});
+}
 
-const registrate = (action) => fetch(
-  'https://loft-taxi.glitch.me/register',
-  {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    body: JSON.stringify(action.payload),
-  },
-)
-.then((response) => response.json())
-.then((data) => {
-  if (data.success) {
-    return data;
+export function* registrateRequestSaga(action) {
+  try {
+    const { token } = yield call(registrate, action);
+    yield put(requestSuccess(token));
+  } catch (e) {
+    yield put(requestFailure(e.message));
   }
-  throw new Error(data.error);
-});
+}
 
 export default function* authSaga() {
-  yield takeEvery(authorizeRequest, function* request(action) {
-    try {
-      const { token } = yield call(authorize, action);
-      yield put(requestSuccess(token));
-    } catch (e) {
-      yield put(requestFailure(e.message));
-    }
-  });
-  yield takeEvery(registrationRequest, function* request(action) {
-    try {
-      const { token } = yield call(registrate, action);
-      yield put(requestSuccess(token));
-    } catch (e) {
-      yield put(requestFailure(e.message));
-    }
-  });
+  yield takeEvery(authorizeRequest, authorizeRequestSaga);
+  yield takeEvery(registrationRequest, registrateRequestSaga);
 }
