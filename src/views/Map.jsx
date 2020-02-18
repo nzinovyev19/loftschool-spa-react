@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { connect, useSelector } from 'react-redux';
-import { getToken } from 'modules/auth/selectors';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+} from 'react';
+import { useSelector } from 'react-redux';
+
 import TravelInfo from 'components/MapInfo/TravelInfo';
 import ProfileInfo from 'components/MapInfo/ProfileInfo';
+import { getCoords } from 'modules/route/selectors';
 
 import Mapboxgl from 'mapbox-gl';
 import Box from '@material-ui/core/Box';
@@ -11,29 +15,53 @@ import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 
 Mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
+let map = null;
 
-Map.propTypes = {
-  token: PropTypes.string.isRequired,
-};
-
-function Map({ token }) {
+function Map() {
   const [mapOptions] = useState({
-    lng: 49.1315,
-    lat: 55.7824,
-    zoom: 10,
+    lng: 30.27,
+    lat: 60,
+    zoom: 12,
   });
-  const profile = useSelector((state) => state.profile.info);
   const style = {
     position: 'absolute',
     top: 0,
     bottom: 0,
     width: '100%',
   };
-  let mapContainer;
+  const profile = useSelector((state) => state.profile.info);
+  const coords = useSelector((state) => getCoords(state));
+  const mapContainerRef = useRef(null);
+
+  const drawRoute = () => {
+    map.flyTo({
+      zoom: 15,
+      center: coords[0],
+    });
+    map.addLayer({
+      id: 'route',
+      type: 'line',
+      source: {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates: coords,
+          },
+        },
+      },
+      paint: {
+        'line-color': '#ffc617',
+        'line-width': 8,
+      },
+    });
+  };
 
   useEffect(() => {
-    const map = new Mapboxgl.Map({
-      container: mapContainer,
+    map = new Mapboxgl.Map({
+      container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [mapOptions.lng, mapOptions.lat],
       zoom: mapOptions.zoom,
@@ -41,6 +69,13 @@ function Map({ token }) {
     return () => {
       map.remove();
     };
+  }, [mapOptions]);
+
+  useEffect(() => {
+    if (map.getLayer('route')) {
+      map.removeLayer('route').removeSource('route');
+    }
+    if (coords && coords.length) drawRoute();
   });
 
   return (
@@ -66,13 +101,9 @@ function Map({ token }) {
           </Grid>
         </Grid>
       </Container>
-      <div style={style} ref={(el) => { mapContainer = el; }} />
+      <div style={style} ref={mapContainerRef} />
     </Box>
   );
 }
 
-const mapStateToProps = (state) => ({
-  token: getToken(state),
-});
-
-export default connect(mapStateToProps)(Map);
+export default Map;
