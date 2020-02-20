@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import BaseButton from 'components/BaseButton';
 import { getIsLoading } from 'modules/route/selectors';
@@ -12,10 +13,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 
 export default function TravelInfo() {
-  const [addressesForm, setAddressesForm] = React.useState({
-    from: '',
-    to: '',
-  });
+  const { handleSubmit, control } = useForm();
   const { addresses, error, isLoading } = useSelector((state) => state.addresses);
   const routeIsLoading = useSelector((state) => getIsLoading(state));
   const dispatch = useDispatch();
@@ -24,21 +22,12 @@ export default function TravelInfo() {
     if (!addresses || !addresses.length) dispatch(fetchAddressesRequest());
   }, [dispatch, addresses]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(fetchRouteRequest(addressesForm));
-  };
-
-  const handleChange = (e) => {
-    const { value } = e.target;
-    setAddressesForm({
-      ...addressesForm,
-      [e.target.name]: value,
-    });
-  };
+  function onSubmit(data) {
+    dispatch(fetchRouteRequest(data));
+  }
 
   return (
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)}>
       {isLoading ? (
         <div>Загрузка...</div>
       ) : (
@@ -46,39 +35,39 @@ export default function TravelInfo() {
           <Box>
             <FormControl fullWidth>
               <InputLabel>Откуда</InputLabel>
-              <Select
-                fullWidth
+              <Controller
+                control={control}
                 name="from"
-                placeholder="Откуда"
-                disabled={isLoading}
-                value={addressesForm.from}
-                onChange={handleChange}
-              >
-                {addresses.map((address) => (
-                  address === addressesForm.to
-                    ? null
-                    : (<MenuItem key={address} value={address}>{address}</MenuItem>)
-                ))}
-              </Select>
+                defaultValue=""
+                as={(
+                  <Select
+                    fullWidth
+                    placeholder="Откуда"
+                    disabled={isLoading}
+                  >
+                    {addresses.map((address) => <MenuItem key={address} value={address}>{address}</MenuItem>)}
+                  </Select>
+                )}
+              />
             </FormControl>
           </Box>
           <Box mt={3}>
             <FormControl fullWidth>
               <InputLabel>Куда</InputLabel>
-              <Select
-                fullWidth
+              <Controller
+                control={control}
                 name="to"
-                placeholder="Куда"
-                disabled={isLoading}
-                value={addressesForm.to}
-                onChange={handleChange}
-              >
-                {addresses.map((address) => (
-                  address === addressesForm.from
-                    ? null
-                    : (<MenuItem key={address} value={address}>{address}</MenuItem>)
-                ))}
-              </Select>
+                defaultValue=""
+                as={(
+                  <Select
+                    fullWidth
+                    placeholder="Откуда"
+                    disabled={isLoading}
+                  >
+                    {addresses.map((address) => <MenuItem key={address} value={address}>{address}</MenuItem>)}
+                  </Select>
+                )}
+              />
             </FormControl>
           </Box>
         </>
@@ -98,7 +87,7 @@ export default function TravelInfo() {
           fullWidth
           type="submit"
           content="Вызвать такси"
-          disabled={routeIsLoading || !addressesForm.from || !addressesForm.to}
+          disabled={routeIsLoading}
           bgcolor={routeIsLoading ? 'text.disabled' : ''}
         />
       </Box>
