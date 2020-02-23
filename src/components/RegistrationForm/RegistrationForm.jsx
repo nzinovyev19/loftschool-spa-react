@@ -1,4 +1,5 @@
 import React from 'react';
+import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registrationRequest } from 'modules/auth/actions';
@@ -23,20 +24,18 @@ const Form = styled(Box)({
 });
 
 export default function RegistrationForm() {
-  const [stateForm, setStateForm] = React.useState({
-    email: '',
-    name: '',
-    surname: '',
-    password: '',
-  });
+  const {
+    register,
+    handleSubmit,
+    errors,
+  } = useForm();
   const history = useHistory();
   const dispatch = useDispatch();
   const error = useSelector((state) => getError(state));
   const isLoading = useSelector((state) => getIsLoading(state));
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    dispatch(registrationRequest({ ...stateForm }));
+  function onSubmit(data) {
+    dispatch(registrationRequest(data));
   }
 
   function pushOnAuthorizationForm(e) {
@@ -44,18 +43,10 @@ export default function RegistrationForm() {
     history.push('/authorization');
   }
 
-  function handleChange(e) {
-    const { value } = e.target;
-    setStateForm({
-      ...stateForm,
-      [e.target.name]: value,
-    });
-  }
-
   return (
     <Form
       component="form"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Typography
         component="b"
@@ -82,12 +73,13 @@ export default function RegistrationForm() {
         mt={2}
       >
         <TextField
+          error={!!errors.email}
+          helperText={errors.email && 'Поле обязательно для заполнения'}
+          inputRef={register({ required: true })}
           label="Адрес электронной почты *"
           type="email"
           name="email"
           fullWidth
-          value={stateForm.email}
-          onChange={handleChange}
         />
       </Box>
       <Box
@@ -97,22 +89,24 @@ export default function RegistrationForm() {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
+              error={!!errors.name}
+              helperText={errors.name && 'Обязательно для заполнения'}
+              inputRef={register({ required: true })}
               label="Имя*"
               type="text"
               name="name"
               fullWidth
-              value={stateForm.name}
-              onChange={handleChange}
             />
           </Grid>
           <Grid item xs={6}>
             <TextField
+              error={!!errors.surname}
+              helperText={errors.surname && 'Обязательно для заполнения'}
+              inputRef={register({ required: true })}
               label="Фамилия*"
               type="text"
               name="surname"
               fullWidth
-              value={stateForm.surname}
-              onChange={handleChange}
             />
           </Grid>
         </Grid>
@@ -122,12 +116,13 @@ export default function RegistrationForm() {
         mt={3}
       >
         <TextField
+          error={!!errors.password}
+          helperText={errors.password && 'Поле обязательно для заполнения'}
+          inputRef={register({ required: true })}
           label="Пароль *"
           type="password"
           name="password"
           fullWidth
-          value={stateForm.password}
-          onChange={handleChange}
         />
       </Box>
       <Box

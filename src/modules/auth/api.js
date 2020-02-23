@@ -3,7 +3,7 @@ export const authorize = (authorizationInfo) => fetch(
   {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    body: JSON.stringify(authorizationInfo),
+    body: JSON.stringify(authorizationInfo.payload),
   },
 )
 .then((response) => response.json())
@@ -19,7 +19,7 @@ export const registrate = (registrationInfo) => fetch(
   {
     method: 'POST',
     headers: { 'Content-Type': 'application/json;charset=utf-8' },
-    body: JSON.stringify(registrationInfo),
+    body: JSON.stringify(registrationInfo.payload),
   },
 )
 .then((response) => response.json())

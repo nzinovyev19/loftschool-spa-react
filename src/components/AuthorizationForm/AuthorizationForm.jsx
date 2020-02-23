@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { authorizeRequest } from 'modules/auth/actions';
 import { connect } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
+import { authorizeRequest } from 'modules/auth/actions';
 import { getIsLoading, getError, getToken } from 'modules/auth/selectors';
 import BaseButton from 'components/BaseButton';
 
@@ -32,10 +33,11 @@ AuthorizationForm.defaultProps = {
 };
 
 export function AuthorizationForm(props) {
-  const [state, setState] = React.useState({
-    email: '',
-    password: '',
-  });
+  const {
+    register,
+    handleSubmit,
+    errors,
+  } = useForm();
   const history = useHistory();
   const {
     isLoading,
@@ -43,9 +45,8 @@ export function AuthorizationForm(props) {
     authorizeRequest,
   } = props;
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    authorizeRequest({ email: state.email, password: state.password });
+  function onSubmit(data) {
+    authorizeRequest(data);
   }
 
   function pushOnRegisrtationForm(e) {
@@ -53,18 +54,10 @@ export function AuthorizationForm(props) {
     history.push('/registration');
   }
 
-  function handleChange(e) {
-    const { value } = e.target;
-    setState({
-      ...state,
-      [e.target.name]: value,
-    });
-  }
-
   return (
     <Form
       component="form"
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <Typography
         component="b"
@@ -91,14 +84,15 @@ export function AuthorizationForm(props) {
         mt={2}
       >
         <TextField
+          error={!!errors.email}
+          helperText={errors.email && 'Поле обязательно для заполнения'}
+          inputRef={register({ required: true })}
           label="Почта*"
           placeholder="Почта*"
           type="email"
           name="email"
           fullWidth
           data-testid="email-input"
-          value={state.email}
-          onChange={handleChange}
         />
       </Box>
       <Box
@@ -106,13 +100,14 @@ export function AuthorizationForm(props) {
         mt={3}
       >
         <TextField
+          error={!!errors.password}
+          helperText={errors.password && 'Поле обязательно для заполнения'}
+          inputRef={register({ required: true })}
           label="Пароль*"
           placeholder="Пароль*"
           type="password"
           name="password"
           fullWidth
-          value={state.password}
-          onChange={handleChange}
         />
       </Box>
       <Box
