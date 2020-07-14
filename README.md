@@ -1,5 +1,8 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Tasks
+У вас должно быть функциональное приложение. Где пользователь может зарегистрироваться, сохранить данные профиля и заказать такси.
+
 ## Available Scripts
 
 In the project directory, you can run:
